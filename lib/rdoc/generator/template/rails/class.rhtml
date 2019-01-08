@@ -12,11 +12,6 @@
     <meta name="description" content="<%= human_desc %>">
     <meta property="og:description" content="<%= human_desc %>">
   <% end %>
-
-    <meta name="keywords" content="<%= klass.full_name %> class">
-  <% unless klass.method_list.empty? %>
-    <meta name="keywords" content="<%= klass.method_list.map(&:name).join(", ") %>">
-  <% end %>
 </head>
 
 <body>
