@@ -3,7 +3,7 @@
 <head>
     <title><%= h file.name %></title>
     <meta charset="<%= @options.charset %>" />
-    <%= include_template '_head.rhtml', {:rel_prefix => rel_prefix} %>
+    <%= include_template '_head.rhtml', { rel_prefix: rel_prefix, title: file.name } %>
 </head>
 
 <body>
