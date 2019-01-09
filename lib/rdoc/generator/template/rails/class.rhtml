@@ -12,6 +12,11 @@
 </head>
 
 <body>
+    <div>
+        <%# TODO: Cache Navigation HTML Outpu %>
+        <%= include_template '_navigation_tree.html.erb', { tree: menu_tree, rel_prefix: rel_prefix } %>
+    </div>
+
     <div class="banner">
         <% if ENV['HORO_PROJECT_NAME'] %>
             <span><%= ERB::Util.html_escape(ENV['HORO_PROJECT_NAME']) %> <%= ERB::Util.html_escape(ENV['HORO_PROJECT_VERSION']) %></span><br />
