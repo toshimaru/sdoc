@@ -190,6 +190,11 @@ class RDoc::Generator::SDoc
     tree
   end
 
+  def menu_tree
+    topclasses = @classes.select {|klass| !(RDoc::ClassModule === klass.parent) }
+    generate_file_tree + generate_class_tree_level(topclasses)
+  end
+
   ### Determines index path based on @options.main_page (or lack thereof)
   def index_path
     # Break early to avoid a big if block when no main page is specified
