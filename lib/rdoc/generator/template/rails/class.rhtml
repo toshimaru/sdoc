@@ -9,14 +9,52 @@
     <meta name="description" content="<%= human_desc %>">
     <meta property="og:description" content="<%= human_desc %>">
   <% end %>
+<style>
+.sidenav {
+  height: 100%; /* Full-height: remove this if you want "auto" height */
+  width: 300px; /* Set the width of the sidebar */
+  position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+  top: 0;
+  left: 0;
+  overflow: auto;
+  padding-top: 10px;
+  background: #f0efef;
+}
+
+.sidenav ul li {
+    list-style: none;
+    margin: 0 0 0 1em;
+}
+
+.sidenav .icon {
+    background: url("<%= rel_prefix %>/i/arrow-right.svg");
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+}
+
+.main {
+  margin-left: 300px; /* Same as the width of the sidenav */
+}
+</style>
+<script type="text/javascript" charset="utf-8">
+$(() => {
+    $(".sidenav .icon").on("click", function(e) { 
+        $(this).siblings("ul").show();
+    });
+});
+</script>
 </head>
 
 <body>
+<div class="sidenav">
     <div>
         <%# TODO: Cache Navigation HTML Outpu %>
-        <%= include_template '_navigation_tree.html.erb', { tree: menu_tree, rel_prefix: rel_prefix } %>
+        <%= include_template '_navigation_tree.html.erb', { tree: menu_tree, rel_prefix: rel_prefix, nested: false } %>
     </div>
+</div>
 
+<div class="main">
     <div class="banner">
         <% if ENV['HORO_PROJECT_NAME'] %>
             <span><%= ERB::Util.html_escape(ENV['HORO_PROJECT_NAME']) %> <%= ERB::Util.html_escape(ENV['HORO_PROJECT_VERSION']) %></span><br />
@@ -43,5 +81,7 @@
     <div id="bodyContent">
         <%= include_template '_context.rhtml', {:context => klass, :rel_prefix => rel_prefix} %>
     </div>
+</div>
+
   </body>
 </html>
