@@ -1,16 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title><%= h klass.full_name %></title>
-    <meta charset="<%= @options.charset %>" />
-    <%= include_template '_head.rhtml', { rel_prefix: rel_prefix, title: klass.full_name } %>
-  <% unless (description = klass.description).empty? %>
-    <% human_desc = truncate(strip_tags(description.gsub("\n", " ").strip)) %>
-    <meta name="description" content="<%= human_desc %>">
-    <meta property="og:description" content="<%= human_desc %>">
-  <% end %>
-</head>
-<body>
+---
+layout: default
+---
 <div class="main">
     <div class="banner">
         <% if ENV['HORO_PROJECT_NAME'] %>
@@ -39,5 +29,3 @@
         <%= include_template '_context.rhtml', {:context => klass, :rel_prefix => rel_prefix} %>
     </div>
 </div>
-</body>
-</html>
