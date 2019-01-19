@@ -1,10 +1,11 @@
 ---
+title: <%= klass.full_name %>
 layout: default
 ---
 <div class="main">
     <div class="banner">
         <% if ENV['HORO_PROJECT_NAME'] %>
-            <span><%= ERB::Util.html_escape(ENV['HORO_PROJECT_NAME']) %> <%= ERB::Util.html_escape(ENV['HORO_PROJECT_VERSION']) %></span><br />
+            <span><%= h ENV['HORO_PROJECT_NAME'] %> <%= h ENV['HORO_PROJECT_VERSION'] %></span><br />
         <% end %>
         <h1>
             <span class="type"><%= klass.module? ? 'Module' : 'Class' %></span>
