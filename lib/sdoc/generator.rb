@@ -178,7 +178,7 @@ class RDoc::Generator::SDoc
   def generate_navigation
     topclasses = @classes.select { |klass| !(RDoc::ClassModule === klass.parent) }
     tree = generate_file_tree + generate_class_tree_level(topclasses)
-    File.write("#{@template_dir}/_navigation.html.erb", nav_template)
+    File.write("#{@template_dir}/resources/navigation.html", nav_template)
   end
 
   def nav_template
