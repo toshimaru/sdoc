@@ -173,7 +173,7 @@ class RDoc::Generator::SDoc
 
   def nav_template
     templatefile = @template_dir + '_navigation_tree.html.erb'
-    include_template(templatefile, { tree: menu_tree, rel_prefix: "/", nested: false })
+    include_template(templatefile, { tree: menu_tree, nested: false })
   end
 
   ### Recursivly build class tree structure
