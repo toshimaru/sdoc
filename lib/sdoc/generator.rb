@@ -95,7 +95,6 @@ class RDoc::Generator::SDoc
 
     generate_navigation
 
-    generate_index_file
     generate_file_files
     generate_class_files
   end
@@ -114,15 +113,6 @@ class RDoc::Generator::SDoc
   def debug_msg( *msg )
     return unless $DEBUG_RDOC
     $stderr.puts( *msg )
-  end
-
-  ### Create index.html with frameset
-  def generate_index_file
-    debug_msg "Generating index file in #@outputdir"
-    templatefile = @template_dir + 'index.rhtml'
-    outfile      = @outputdir + 'index.html'
-
-    self.render_template( templatefile, binding(), outfile ) unless @options.dry_run
   end
 
   ### Generate a documentation file for each class
