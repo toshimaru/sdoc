@@ -90,8 +90,8 @@ class RDoc::Generator::SDoc
     copy_resources
     @json_index.generate
     @json_index.generate_gzipped
-    # generate_search_index
-    # generate_class_tree
+    generate_search_index
+    generate_class_tree
 
     generate_navigation
 
@@ -107,7 +107,7 @@ class RDoc::Generator::SDoc
     FILE_DIR
   end
 
-  private
+  private 
 
   ### Output progress information if debugging is enabled
   def debug_msg( *msg )
