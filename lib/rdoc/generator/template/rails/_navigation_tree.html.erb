@@ -3,7 +3,7 @@
   <li>
     <% if nested_tree.any? %><div class="icon"></div><% end %>
     <% if path.empty? %>
-      <%= file_name.empty? ? class_name : file_name %>
+      <span class="text-muted"><%= file_name.empty? ? class_name : file_name %></span>
     <% else %>
       <a href="<%= "/#{path}" %>"><%= class_name %></a>
     <% end %>
