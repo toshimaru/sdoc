@@ -28,16 +28,25 @@
 
 
   <% unless context.classes_and_modules.empty? %>
-    <!-- Namespace -->
     <h2>Namespace</h2>
-    <ul>
-      <% (context.modules.sort + context.classes.sort).each do |mod| %>
-        <li>
-          <span class="type"><%= mod.type.upcase %></span>
-          <a href="<%= context.aref_to mod.path %>"><%= mod.full_name %></a>
-        </li>
+    
+    <% unless context.modules.empty? %>
+      <h3>Module</h3>
+      <ul>
+      <% context.modules.sort.each do |mod| %>
+        <li><a href="<%= context.aref_to mod.path %>"><%= mod.full_name %></a></li>
       <% end %>
-    </ul>
+      </ul>
+    <% end %>
+    
+    <% unless context.classes.empty? %>
+      <h3>Class</h3>
+      <ul>
+      <% context.classes.sort.each do |mod| %>
+        <li><a href="<%= context.aref_to mod.path %>"><%= mod.full_name %></a></li>
+      <% end %>
+      </ul>
+    <% end %>
   <% end %>
 
   <% unless context.method_list.empty? %>
