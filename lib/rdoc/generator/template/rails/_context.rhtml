@@ -29,21 +29,24 @@
 
   <% unless context.classes_and_modules.empty? %>
     <h2>Namespace</h2>
-    <ul>
-      <% unless context.modules.empty? %>
-        <h3>Module</h3>
-        <% context.modules.sort.each do |mod| %>
-          <li><a href="<%= context.aref_to mod.path %>"><%= mod.full_name %></a></li>
-        <% end %>
+    
+    <% unless context.modules.empty? %>
+      <h3>Module</h3>
+      <ul>
+      <% context.modules.sort.each do |mod| %>
+        <li><a href="<%= context.aref_to mod.path %>"><%= mod.full_name %></a></li>
       <% end %>
-      
-      <% unless context.classes.empty? %>
-        <h3>Class</h3>
-        <% context.classes.sort.each do |mod| %>
-          <li><a href="<%= context.aref_to mod.path %>"><%= mod.full_name %></a></li>
-        <% end %>
+      </ul>
+    <% end %>
+    
+    <% unless context.classes.empty? %>
+      <h3>Class</h3>
+      <ul>
+      <% context.classes.sort.each do |mod| %>
+        <li><a href="<%= context.aref_to mod.path %>"><%= mod.full_name %></a></li>
       <% end %>
-    </ul>
+      </ul>
+    <% end %>
   <% end %>
 
   <% unless context.method_list.empty? %>
