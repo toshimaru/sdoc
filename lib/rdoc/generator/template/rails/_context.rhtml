@@ -146,7 +146,7 @@
         visibilities.each do |visibility, methods|
           next if methods.empty?
     %>
-      <h2 id="methods"><%= type.capitalize %> <%= visibility.to_s.capitalize %> methods</h2>
+      <h2 id="<%= type.to_s + "-" + visibility.to_s %>-methods"><%= type.capitalize %> <%= visibility.to_s.capitalize %> methods</h2>
       <% methods.each do |method| %>
         <div class="method">
           <h3 id="<%= method.aref %>">
