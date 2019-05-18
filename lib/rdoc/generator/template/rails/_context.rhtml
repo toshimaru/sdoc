@@ -50,25 +50,14 @@
   <% end %>
 
   <% unless context.method_list.empty? %>
-    <!-- Method ref -->
     <h2 id="methods">Methods</h2>
-    <dl class="methods">
-      <% each_letter_group(context.method_list) do |group| %>
-        <dt><%= group[:name] %></dt>
-        <dd>
-          <ul>
-            <% group[:methods].each_with_index do |method, i|  %>
-              <%
-                comma = group[:methods].size == i+1 ? '' : ','
-              %>
-              <li>
-                <a href="#<%= method.aref %>"><%= h method.name %></a><%= comma %>
-              </li>
-            <% end %>
-          </ul>
-        </dd>
+    <ul>
+      <% context.method_list.sort{ |a, b| a.name <=> b.name }.each do |method| %>
+        <li>
+          <a href="#<%= method.aref %>"><%= h method.name %></a>
+        </li>
       <% end %>
-    </dl>
+    </ul>
   <% end %>
 
   <% unless context.includes.empty? %>
