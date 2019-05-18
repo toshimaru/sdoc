@@ -1,20 +1,4 @@
 module SDoc::Helpers
-  def each_letter_group(methods, &block)
-    group = {:name => '', :methods => []}
-    methods.sort{ |a, b| a.name <=> b.name }.each do |method|
-      gname = group_name method.name
-      if gname != group[:name]
-        yield group unless group[:methods].size == 0
-        group = {
-          :name => gname,
-          :methods => []
-        }
-      end
-      group[:methods].push(method)
-    end
-    yield group unless group[:methods].size == 0
-  end
-
   # Strips out HTML tags from a given string.
   #
   # Example:
