@@ -191,8 +191,8 @@
                   <a href="<%= "#{github}#L#{line}" %>" target="_blank" class="github_url">on GitHub</a>
                 <% end %>
               </p>
-              <div id="<%= method.aref %>_source" class="dyn-source">
-                <pre><%= markup %></pre>
+              <div id="<%= method.aref %>_source">
+                <pre><code class="ruby"><%= markup %></code></pre>
               </div>
             </div>
             <% end %>
