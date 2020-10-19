@@ -9,6 +9,8 @@ require 'sdoc/helpers'
 require 'sdoc/version'
 require 'rdoc'
 
+require 'active_support/all'
+
 class RDoc::ClassModule
   def with_documentation?
     document_self_or_methods || classes_and_modules.any?{ |c| c.with_documentation? }
@@ -168,7 +170,7 @@ class RDoc::Generator::SDoc
   def generate_navigation
     topclasses = @classes.select { |klass| !(RDoc::ClassModule === klass.parent) }
     tree = generate_file_tree + generate_class_tree_level(topclasses)
-    File.write("#{@template_dir}/resources/navigation.html", nav_template)
+    File.write("#{@template_dir}/resources/navigation.html", nav_template.squish!)
   end
 
   def nav_template
