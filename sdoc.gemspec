@@ -16,14 +16,14 @@ Gem::Specification.new do |s|
 
   s.require_path = 'lib'
 
-  s.required_ruby_version = Gem::Requirement.new('>= 1.9.3')
-  s.required_rubygems_version = Gem::Requirement.new(">= 1.3.6") if
-    s.respond_to? :required_rubygems_version=
+  s.required_ruby_version = ">= 2.7"
 
   s.rdoc_options = ["--charset=UTF-8"]
   s.extra_rdoc_files = ["README.md"]
 
-  s.add_runtime_dependency("rdoc", ">= 5.0")
+  s.add_runtime_dependency "rdoc", ">= 5.0"
+  s.add_runtime_dependency "nokogiri"
+  s.add_runtime_dependency "rouge"
 
   s.files         = `git ls-files`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
