@@ -4,6 +4,12 @@
 
 **Powering https://railsdoc.github.io/**
 
+## Original SDoc
+
+This repository is a fork of [rails/sdoc](https://github.com/rails/sdoc).
+
+THE [master branch](https://github.com/toshimaru/sdoc/tree/master) is synchronized with the [main branch of rails/sdoc](https://github.com/rails/sdoc/tree/main).
+
 ### What is sdoc?
 
 SDoc is an HTML template built on top of the RDoc documentation generator for Ruby code.
