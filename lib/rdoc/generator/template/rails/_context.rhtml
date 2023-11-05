@@ -5,10 +5,9 @@
     </div>
   <% end %>
 
-
   <% unless context.requires.empty? %>
     <!-- File only: requires -->
-    <div class="sectiontitle">Required Files</div>
+    <h2 id="required-files">Required Files</h2>
     <ul>
       <% context.requires.each do |req| %>
         <li><%= h req.name %></li>
@@ -16,11 +15,10 @@
     </ul>
   <% end %>
 
-
   <% sections = context.sections.select { |s| s.title }.sort_by{ |s| s.title.to_s } %>
-  <% unless sections.empty? then %>
+  <% unless sections.empty? %>
     <!-- Sections -->
-    <div class="sectiontitle">Sections</div>
+    <h2 id="sections">Sections</h2>
     <ul>
       <% sections.each do |section| %>
         <li><a href="#<%= section.aref %>"><%= h section.title %></a></li>
@@ -30,44 +28,41 @@
 
 
   <% unless context.classes_and_modules.empty? %>
-    <!-- Namespace -->
-    <div class="sectiontitle">Namespace</div>
+    <h2 id="namespace">Namespace</h2>
+
+    <% unless context.modules.empty? %>
+      <h3 id="module">Module</h3>
+      <ul>
+      <% context.modules.sort.each do |mod| %>
+        <li><a href="<%= context.aref_to mod.path %>"><%= mod.full_name %></a></li>
+      <% end %>
+      </ul>
+    <% end %>
+
+    <% unless context.classes.empty? %>
+      <h3 id="class">Class</h3>
+      <ul>
+      <% context.classes.sort.each do |mod| %>
+        <li><a href="<%= context.aref_to mod.path %>"><%= mod.full_name %></a></li>
+      <% end %>
+      </ul>
+    <% end %>
+  <% end %>
+
+  <% unless context.method_list.empty? %>
+    <h2 id="methods">Methods</h2>
     <ul>
-      <% (context.modules.sort + context.classes.sort).each do |mod| %>
+      <% context.method_list.sort{ |a, b| a.name <=> b.name }.each do |method| %>
         <li>
-          <span class="type"><%= mod.type.upcase %></span>
-          <a href="<%= context.aref_to mod.path %>"><%= mod.full_name %></a>
+          <a href="#<%= method.aref %>"><%= h method.name %></a>
         </li>
       <% end %>
     </ul>
   <% end %>
 
-
-  <% unless context.method_list.empty? %>
-    <!-- Method ref -->
-    <div class="sectiontitle">Methods</div>
-    <dl class="methods">
-      <% each_letter_group(context.method_list) do |group| %>
-        <dt><%= group[:name] %></dt>
-        <dd>
-          <ul>
-            <% group[:methods].each_with_index do |method, i|  %>
-              <%
-                comma = group[:methods].size == i+1 ? '' : ','
-              %>
-              <li>
-                <a href="#<%= method.aref %>"><%= h method.name %></a><%= comma %>
-              </li>
-            <% end %>
-          </ul>
-        </dd>
-      <% end %>
-    </dl>
-  <% end %>
-
   <% unless context.includes.empty? %>
     <!-- Includes -->
-    <div class="sectiontitle">Included Modules</div>
+    <h2 id="included-modules">Included Modules</h2>
     <ul>
       <% context.includes.each do |inc| %>
         <li>
@@ -83,10 +78,7 @@
     </ul>
   <% end %>
 
-
-
   <% context.each_section do |section, constants, attributes| %>
-
     <% if section.title then %>
       <div class="contenttitle" id="<%= h section.aref %>">
         <%= h section.title %>
@@ -101,7 +93,7 @@
 
     <% unless constants.empty? %>
       <!-- Section constants -->
-      <div class="sectiontitle">Constants</div>
+      <h2 id="constants">Constants</h2>
       <table border='0' cellpadding='5'>
         <% constants.each do |const| %>
           <tr valign='top'>
@@ -119,10 +111,9 @@
       </table>
     <% end %>
 
-
     <% unless attributes.empty? %>
       <!-- Section attributes -->
-      <div class="sectiontitle">Attributes</div>
+      <h2 id="attributes">Attributes</h2>
       <table border='0' cellpadding='5'>
         <% attributes.each do |attrib| %>
           <tr valign='top'>
@@ -136,7 +127,6 @@
       </table>
     <% end %>
 
-
     <!-- Methods -->
     <%
       context.methods_by_type(section).each do |type, visibilities|
@@ -145,17 +135,16 @@
         visibilities.each do |visibility, methods|
           next if methods.empty?
     %>
-      <div class="sectiontitle"><%= type.capitalize %> <%= visibility.to_s.capitalize %> methods</div>
+      <h2 id="<%= type.to_s + "-" + visibility.to_s %>-methods"><%= type.capitalize %> <%= visibility.to_s.capitalize %> methods</h2>
       <% methods.each do |method| %>
         <div class="method">
-          <div class="title method-title" id="<%= method.aref %>">
+          <h3 id="<%= method.aref %>">
             <% if method.call_seq %>
-              <b><%= method.call_seq.gsub(/->/, '&rarr;').gsub(/\n(.)/, '<br />\1') %></b>
+              <%= method.call_seq.gsub(/->/, '&rarr;').gsub(/\n(.)/, '<br />\1') %>
             <% else %>
-              <b><%= h method.name %></b><%= h method.params %>
+              <%= h method.name %><%= h method.params %>
             <% end %>
-            <a href="<%= "#{rel_prefix}/#{context.path}##{method.aref}"%>" name="<%= method.aref %>" class="permalink">Link</a>
-          </div>
+          </h3>
 
           <% if method.comment %>
             <div class="description">
@@ -198,13 +187,12 @@
               %>
               <p class="source-link">
                 Source:
-                <a href="javascript:toggleSource('<%= method.aref %>_source')" id="l_<%= method.aref %>_source">show</a>
                 <% if github %>
-                  | <a href="<%= "#{github}#L#{line}" %>" target="_blank" class="github_url">on GitHub</a>
+                  <a href="<%= "#{github}#L#{line}" %>" target="_blank" class="github_url">on GitHub</a>
                 <% end %>
               </p>
-              <div id="<%= method.aref %>_source" class="dyn-source">
-                <pre><%= markup %></pre>
+              <div id="<%= method.aref %>_source">
+                <pre><code class="ruby"><%= markup %></code></pre>
               </div>
             </div>
             <% end %>

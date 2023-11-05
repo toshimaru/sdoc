@@ -9,6 +9,8 @@ require 'sdoc/helpers'
 require 'sdoc/version'
 require 'rdoc'
 
+require 'active_support/all'
+
 class RDoc::ClassModule
   def with_documentation?
     document_self_or_methods || classes_and_modules.any?{ |c| c.with_documentation? }
@@ -93,7 +95,8 @@ class RDoc::Generator::SDoc
     generate_search_index
     generate_class_tree
 
-    generate_index_file
+    generate_navigation
+
     generate_file_files
     generate_class_files
   end
@@ -106,20 +109,12 @@ class RDoc::Generator::SDoc
     FILE_DIR
   end
 
-  protected
+  private 
+
   ### Output progress information if debugging is enabled
   def debug_msg( *msg )
     return unless $DEBUG_RDOC
     $stderr.puts( *msg )
-  end
-
-  ### Create index.html with frameset
-  def generate_index_file
-    debug_msg "Generating index file in #@outputdir"
-    templatefile = @template_dir + 'index.rhtml'
-    outfile      = @outputdir + 'index.html'
-
-    self.render_template( templatefile, binding(), outfile ) unless @options.dry_run
   end
 
   ### Generate a documentation file for each class
@@ -172,6 +167,17 @@ class RDoc::Generator::SDoc
     end unless @options.dry_run
   end
 
+  def generate_navigation
+    topclasses = @classes.select { |klass| !(RDoc::ClassModule === klass.parent) }
+    tree = generate_file_tree + generate_class_tree_level(topclasses)
+    File.write("#{@template_dir}/resources/navigation.html", nav_template.squish!)
+  end
+
+  def nav_template
+    templatefile = @template_dir + '_navigation_tree.html.erb'
+    include_template(templatefile, { tree: menu_tree, nested: false })
+  end
+
   ### Recursivly build class tree structure
   def generate_class_tree_level(classes, visited = {})
     tree = []
@@ -188,6 +194,11 @@ class RDoc::Generator::SDoc
       tree << item
     end
     tree
+  end
+
+  def menu_tree
+    topclasses = @classes.select { |klass| !(RDoc::ClassModule === klass.parent) }
+    generate_file_tree + generate_class_tree_level(topclasses)
   end
 
   ### Determines index path based on @options.main_page (or lack thereof)

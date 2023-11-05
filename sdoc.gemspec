@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency "rdoc", ">= 5.0"
   s.add_runtime_dependency "nokogiri"
   s.add_runtime_dependency "rouge"
+  s.add_runtime_dependency "activesupport"
 
   s.files         = `git ls-files`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
