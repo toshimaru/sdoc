@@ -1,4 +1,7 @@
 module SDoc::Helpers
+  require_relative "helpers/git"
+  include ::SDoc::Helpers::Git
+
   # Strips out HTML tags from a given string.
   #
   # Example:
