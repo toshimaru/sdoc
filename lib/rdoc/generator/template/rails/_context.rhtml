@@ -170,33 +170,22 @@
             </div>
           <% end %>
 
-          <% if method.token_stream %>
-            <% markup = method.markup_code %>
-            <div class="sourcecode">
-              <%
-                # generate github link
-                github = if options.github
-                  if markup =~ /File\s(\S+), line (\d+)/
-                    path = $1
-                    line = $2.to_i
-                  end
-                  path && github_url(path)
-                else
-                  false
-                end
-              %>
-              <p class="source-link">
-                Source:
-                <% if github %>
-                  <a href="<%= "#{github}#L#{line}" %>" target="_blank" class="github_url">on GitHub</a>
-                <% end %>
-              </p>
-              <div id="<%= method.aref %>_source">
-                <pre><code class="ruby"><%= markup %></code></pre>
-              </div>
-            </div>
-            <% end %>
-          </div>
+          <% source_code, source_url = method_source_code_and_url(method) %>
+          <% if source_code %>
+            <details class="method__source">
+              <summary>
+                <span class="label">Source code</span>
+              </summary>
+
+              <pre><code class="ruby"><%= source_code %></code></pre>
+              <% if source_url %>
+                <a href="<%= source_url %>" target="_blank" class="github_url">See on GitHub</a>
+              <% end %>
+            </details>
+          <% elsif source_url %>
+            <a href="<%= source_url %>" target="_blank" class="github_url">See on GitHub</a>
+          <% end %>
+        </div>
         <% end %><%# methods.each %>
       <% end %><%# visibilities.each %>
     <% end %><%# context.methods_by_type %>
