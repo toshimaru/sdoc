@@ -3,7 +3,6 @@ require 'pathname'
 require 'fileutils'
 require 'json'
 
-require 'sdoc/github'
 require 'sdoc/templatable'
 require 'sdoc/helpers'
 require 'sdoc/version'
@@ -28,7 +27,6 @@ class RDoc::Generator::SDoc
   DESCRIPTION = 'Searchable HTML documentation'
 
   include ERB::Util
-  include SDoc::GitHub
   include SDoc::Templatable
   include SDoc::Helpers
 
@@ -55,13 +53,16 @@ class RDoc::Generator::SDoc
     opt = options.option_parser
     opt.separator nil
     opt.separator "SDoc generator options:"
+
+    # FIXME: Use options
+    # options.github = true
     opt.separator nil
     opt.on("--github", "-g",
             "Generate links to github.") do |value|
       options.github = true
     end
-    opt.separator nil
 
+    opt.separator nil
     opt.on("--version", "-v", "Output current version") do
       puts SDoc::VERSION
       exit
@@ -109,7 +110,7 @@ class RDoc::Generator::SDoc
     FILE_DIR
   end
 
-  private 
+  private
 
   ### Output progress information if debugging is enabled
   def debug_msg( *msg )
