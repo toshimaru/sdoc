@@ -31,6 +31,6 @@ module SDoc::Helpers
       source_url = github_url(Regexp.last_match(1), line: Regexp.last_match(2))
     end
 
-    [rdoc_method.instance_of?(RDoc::GhostMethod) ? nil : source_code, source_url]
+    [rdoc_method.instance_of?(RDoc::GhostMethod) ? nil : h(source_code), source_url]
   end
 end
