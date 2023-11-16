@@ -101,7 +101,7 @@
             <td>=</td>
             <td class="attr-value"><%= h const.value %></td>
           </tr>
-          <% if const.comment %>
+          <% if const.comment.present? %>
             <tr valign='top'>
               <td>&nbsp;</td>
               <td colspan="2" class="attr-desc"><%= const.description.strip %></td>
