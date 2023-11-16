@@ -174,16 +174,16 @@
           <% if source_code %>
             <details class="method__source">
               <summary>
-                <span class="label">Source code</span>
+                <span class="label">📝 Source code</span>
               </summary>
 
               <pre><code class="ruby"><%= source_code %></code></pre>
               <% if source_url %>
-                <a href="<%= source_url %>" target="_blank" class="github_url">See on GitHub</a>
+                <a href="<%= source_url %>" target="_blank" class="github_url">🔎 See on GitHub</a>
               <% end %>
             </details>
           <% elsif source_url %>
-            <a href="<%= source_url %>" target="_blank" class="github_url">See on GitHub</a>
+            <a href="<%= source_url %>" target="_blank" class="github_url">🔎 See on GitHub</a>
           <% end %>
         </div>
         <% end %><%# methods.each %>
