@@ -1,4 +1,10 @@
+# frozen_string_literal: true
+
+require "erb"
+
 module SDoc::Helpers
+  include ERB::Util
+
   require_relative "helpers/git"
   include ::SDoc::Helpers::Git
 
