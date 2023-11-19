@@ -1,10 +1,16 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
 describe SDoc::Helpers do
   before :each do
     @helpers = Class.new do
       include SDoc::Helpers
+
+      attr_accessor :options
     end.new
+
+    @helpers.options = RDoc::Options.new
   end
 
   describe "#strip_tags" do
