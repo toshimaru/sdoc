@@ -1,4 +1,5 @@
-require 'erb'
+# frozen_string_literal: true
+
 require 'pathname'
 require 'fileutils'
 require 'json'
@@ -26,7 +27,6 @@ class RDoc::Generator::SDoc
 
   DESCRIPTION = 'Searchable HTML documentation'
 
-  include ERB::Util
   include SDoc::Templatable
   include SDoc::Helpers
 
