@@ -1,5 +1,5 @@
 ---
-title: <%= file.name %>
+title: <%= context.name %>
 layout: default
 ---
 <div>
@@ -8,12 +8,12 @@ layout: default
             <span><%= h ENV['HORO_PROJECT_NAME'] %> <%= h ENV['HORO_PROJECT_VERSION'] %></span><br />
         <% end %>
         <h1>
-            <%= h file.name %>
+            <%= h context.name %>
         </h1>
         <ul class="files">
-            <% github = github_url(file.relative_name) if options.github %>
+            <% github = github_url(context.relative_name) if options.github %>
             <li>
-                <%= h file.relative_name %>
+                <%= h context.relative_name %>
                 <% if github %>
                     <a href="<%= github %>" target="_blank" class="github_url">on GitHub</a>
                 <% end %>
@@ -22,6 +22,6 @@ layout: default
     </div>
 
     <div id="bodyContent">
-        <%= include_template '_context.rhtml', {:context => file, :rel_prefix => rel_prefix} %>
+        <%= include_template '_context.rhtml', { context: context, rel_prefix: rel_prefix} %>
     </div>
 </div>
