@@ -89,9 +89,9 @@ class RDoc::Generator::SDoc
     @json_index.generate_gzipped
 
     FileUtils.mkdir_p(@output_dir)
+    generate_navigation # original code
     copy_resources
     generate_search_index
-    generate_navigation # original code
     generate_file_files
     generate_class_files
   end
