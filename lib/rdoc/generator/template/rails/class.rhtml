@@ -1,5 +1,5 @@
 ---
-title: <%= klass.full_name %>
+title: <%= context.full_name %>
 layout: default
 ---
 <div class="main">
@@ -7,26 +7,26 @@ layout: default
         <% if ENV['HORO_PROJECT_NAME'] %>
             <span><%= h ENV['HORO_PROJECT_NAME'] %> <%= h ENV['HORO_PROJECT_VERSION'] %></span><br />
         <% end %>
-        <div class="type"><%= klass.module? ? 'Module' : 'Class' %></div>
+        <div class="type"><%= context.module? ? 'Module' : 'Class' %></div>
         <h1>
-            <%= h klass.full_name %>
-            <% if klass.type == 'class' %>
+            <%= h context.full_name %>
+            <% if context.type == 'class' %>
                 <span class="parent">&lt;
-                    <% if String === klass.superclass %>
-                    <%= klass.superclass %>
-                    <% elsif !klass.superclass.nil? %>
-                    <a href="<%= klass.aref_to klass.superclass.path %>"><%= h klass.superclass.full_name %></a>
+                    <% if String === context.superclass %>
+                    <%= context.superclass %>
+                    <% elsif !context.superclass.nil? %>
+                    <a href="<%= context.aref_to context.superclass.path %>"><%= h context.superclass.full_name %></a>
                     <% end %>
                 </span>
             <% end %>
         </h1>
         <ul class="files">
-            <% klass.in_files.each do |file| %>
+            <% context.in_files.each do |file| %>
             <li><a href="<%= "#{rel_prefix}/#{h file.path}" %>"><%= h file.absolute_name %></a></li>
             <% end  %>
         </ul>
     </div>
     <div id="bodyContent">
-        <%= include_template '_context.rhtml', {:context => klass, :rel_prefix => rel_prefix} %>
+        <%= include_template '_context.rhtml', { context: context, rel_prefix: rel_prefix } %>
     </div>
 </div>

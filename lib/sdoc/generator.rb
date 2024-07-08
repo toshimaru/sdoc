@@ -78,7 +78,7 @@ class RDoc::Generator::SDoc
 
     @base_dir = Pathname.pwd.expand_path
     @json_index = RDoc::Generator::JsonIndex.new(self, options)
-    @template_dir = Pathname.new(options.template_dir)
+    @template_dir = Pathname(options.template_dir)
     @output_dir = Pathname(@options.op_dir).expand_path(@base_dir)
   end
 
@@ -112,35 +112,25 @@ class RDoc::Generator::SDoc
     $stderr.puts( *msg )
   end
 
+  def render_file(template_path, output_path, context = nil)
+    debug_msg "Rendering #{output_path}"
+    return if @options.dry_run
+
+    templatefile = @template_dir.join(template_path)
+    output_path = @output_dir.join(output_path)
+    rel_prefix  = @output_dir.relative_path_from(output_path.dirname)
+
+    self.render_template(templatefile, binding(), output_path)
+  end
+
   def generate_class_files
-    templatefile = @template_dir + 'class.rhtml'
-
-    @classes.each do |klass|
-      debug_msg "  working on %s (%s)" % [ klass.full_name, klass.path ]
-      outfile     = @output_dir + klass.path
-      rel_prefix  = @output_dir.relative_path_from( outfile.dirname )
-
-      debug_msg "  rendering #{outfile}"
-      self.render_template( templatefile, binding(), outfile ) unless @options.dry_run
-    end
+    @classes.each { |klass| render_file("class.rhtml", klass.path, klass) }
   end
 
-  ### Generate a documentation file for each file
   def generate_file_files
-    debug_msg "Generating file documentation in #@output_dir"
-    templatefile = @template_dir + 'file.rhtml'
-
-    @files.each do |file|
-      outfile     = @output_dir + file.path
-      debug_msg "  working on %s (%s)" % [ file.full_name, outfile ]
-      rel_prefix  = @output_dir.relative_path_from( outfile.dirname )
-
-      debug_msg "  rendering #{outfile}"
-      self.render_template( templatefile, binding(), outfile ) unless @options.dry_run
-    end
+    @files.each { |file| render_file("file.rhtml", file.path, file) }
   end
 
-  ### Generate file with links for the search engine
   def generate_search_index
     debug_msg "Generating search engine index in #@output_dir"
     templatefile = @template_dir + 'search_index.rhtml'
