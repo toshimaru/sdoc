@@ -32,7 +32,6 @@ class RDoc::Generator::SDoc
 
   GENERATOR_DIRS = [File.join('sdoc', 'generator')]
 
-  TREE_FILE = File.join 'panel', 'tree.js'
   SEARCH_INDEX_FILE = File.join 'js', 'search_index.js'
 
   FILE_DIR = 'files'
@@ -94,7 +93,6 @@ class RDoc::Generator::SDoc
     @json_index.generate
     @json_index.generate_gzipped
     generate_search_index
-    generate_class_tree
 
     generate_navigation
 
@@ -157,17 +155,6 @@ class RDoc::Generator::SDoc
     self.render_template( templatefile, binding(), outfile ) unless @options.dry_run
   end
 
-  ### Create class tree structure and write it as json
-  def generate_class_tree
-    debug_msg "Generating class tree"
-    topclasses = @classes.select {|klass| !(RDoc::ClassModule === klass.parent) }
-    tree = generate_file_tree + generate_class_tree_level(topclasses)
-    debug_msg "  writing class tree to %s" % TREE_FILE
-    File.open(TREE_FILE, "w", 0644) do |f|
-      f.write('var tree = '); f.write(tree.to_json(:max_nesting => 0))
-    end unless @options.dry_run
-  end
-
   def generate_navigation
     topclasses = @classes.select { |klass| !(RDoc::ClassModule === klass.parent) }
     tree = generate_file_tree + generate_class_tree_level(topclasses)
@@ -179,7 +166,7 @@ class RDoc::Generator::SDoc
     include_template(templatefile, { tree: menu_tree, nested: false })
   end
 
-  ### Recursivly build class tree structure
+  # Recursivly build class tree structure
   def generate_class_tree_level(classes, visited = {})
     tree = []
     classes.select do |klass|
