@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.extra_rdoc_files = ["README.md"]
 
-  s.add_runtime_dependency "rdoc", ">= 5.0"
+  s.add_runtime_dependency "rdoc", "< 6.13"
   s.add_runtime_dependency "nokogiri"
   s.add_runtime_dependency "rouge"
   s.add_runtime_dependency "activesupport"
