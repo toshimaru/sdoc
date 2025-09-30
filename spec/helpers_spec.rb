@@ -77,5 +77,27 @@ describe SDoc::Helpers do
       _(source_code).must_match %r{# File .+\.rb, line 2\b}
       _(source_url).must_be_nil
     end
+
+    it "sanitizes source code" do
+      @helpers.options.github = false
+
+      method = rdoc_top_level_for(<<~'RUBY').find_module_named("Foo").find_method("hi", false)
+        module Foo
+          def hi(msg)
+            puts "Hi, #{msg}!"
+          end
+        end
+      RUBY
+
+      source_code, source_url = @helpers.method_source_code_and_url(method)
+
+      expected_source = <<~EXPECTED.chomp
+        def hi(msg)
+          puts &quot;Hi, \#{msg}!&quot;
+        end
+      EXPECTED
+      _(source_code).must_include expected_source
+      _(source_url).must_be_nil
+    end
   end
 end
