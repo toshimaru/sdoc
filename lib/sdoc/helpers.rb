@@ -13,8 +13,21 @@ module SDoc::Helpers
 
     if source_code&.match(/File\s(\S+), line (\d+)/)
       source_url = github_url(Regexp.last_match(1), line: Regexp.last_match(2))
+      source_code = normalize_indentation(source_code)
     end
 
     [rdoc_method.instance_of?(RDoc::GhostMethod) ? nil : source_code, source_url]
+  end
+
+  private
+
+  def normalize_indentation(source_code)
+    return source_code unless source_code.start_with?('# File')
+
+    source_lines = source_code.lines
+    return source_code if source_lines.size < 2
+
+    indent = source_lines.second[/\A */].size
+    source_code.gsub(/^ {#{indent}}/, '')
   end
 end
