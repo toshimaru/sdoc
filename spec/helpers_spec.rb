@@ -88,7 +88,6 @@ describe SDoc::Helpers do
       RUBY
 
       source_code, source_url = @helpers.method_source_code_and_url(method)
-
       expected_source = <<~EXPECTED.chomp
         def hi(msg) = puts &quot;Hi, \#{msg}!&quot;
       EXPECTED
@@ -100,12 +99,12 @@ describe SDoc::Helpers do
       method = rdoc_top_level_for(<<~RUBY).find_module_named("Foo::Bar").find_method("baz", false)
         module Foo
           module Bar
-            def baz
-              puts "hello"
-              if true
-                puts "world"
+              def baz
+                  puts "hello"
+                  if true
+                    puts "world"
+                  end
               end
-            end
           end
         end
       RUBY
@@ -113,10 +112,10 @@ describe SDoc::Helpers do
       source_code, _source_url = @helpers.method_source_code_and_url(method)
       expected_source = <<~EXPECTED.chomp
         def baz
-          puts &quot;hello&quot;
-          if true
-            puts &quot;world&quot;
-          end
+            puts &quot;hello&quot;
+            if true
+              puts &quot;world&quot;
+            end
         end
       EXPECTED
       _(source_code).must_include expected_source
