@@ -28,6 +28,6 @@ module SDoc::Helpers
     return source_code if source_lines.size < 2
 
     indent = source_lines.second[/\A */].size
-    source_code.gsub(/^ {#{indent}}/, '')
+    source_code.gsub(/^ {1,#{indent}}/, '')
   end
 end

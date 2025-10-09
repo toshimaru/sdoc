@@ -95,30 +95,59 @@ describe SDoc::Helpers do
       _(source_url).must_be_nil
     end
 
-    it "normalizes indentation in source code" do
-      method = rdoc_top_level_for(<<~RUBY).find_module_named("Foo::Bar").find_method("baz", false)
-        module Foo
-          module Bar
-              def baz
-                  puts "hello"
-                  if true
-                    puts "world"
-                  end
+    describe "normalizing indentation" do
+      it "normalizes the code" do
+        method = rdoc_top_level_for(<<~RUBY).find_module_named("Foo::Bar").find_method("baz", false)
+          module Foo
+            module Bar
+                def baz
+                    puts "hello"
+                    if true
+                      puts "world"
+                    end
+                end
+            end
+          end
+        RUBY
+
+        source_code, _source_url = @helpers.method_source_code_and_url(method)
+        expected_source = <<~EXPECTED.chomp
+          def baz
+              puts &quot;hello&quot;
+              if true
+                puts &quot;world&quot;
               end
           end
-        end
-      RUBY
+        EXPECTED
+        _(source_code).must_include expected_source
+      end
 
-      source_code, _source_url = @helpers.method_source_code_and_url(method)
-      expected_source = <<~EXPECTED.chomp
-        def baz
-            puts &quot;hello&quot;
-            if true
-              puts &quot;world&quot;
+      it "normalizes the code 2" do
+        method = rdoc_top_level_for(<<~RUBY).find_module_named("Foo::Bar").find_method("baz", false)
+          module Foo
+            module Bar
+                def baz
+                  puts "hello"
+                    if true
+                      puts "world"
+                  end
+              end
             end
-        end
-      EXPECTED
-      _(source_code).must_include expected_source
+          end
+        RUBY
+
+        source_code, _source_url = @helpers.method_source_code_and_url(method)
+        puts source_code
+        expected_source = <<~EXPECTED.chomp
+          def baz
+            puts &quot;hello&quot;
+              if true
+                puts &quot;world&quot;
+            end
+          end
+        EXPECTED
+        _(source_code).must_include expected_source
+      end
     end
   end
 end
