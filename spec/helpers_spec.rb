@@ -148,6 +148,25 @@ describe SDoc::Helpers do
         EXPECTED
         _(source_code).must_include expected_source
       end
+
+      it "normalizes the code 3" do
+        method = rdoc_top_level_for(<<~RUBY).find_module_named("Foo").find_method("bar", false)
+          module Foo
+              def bar
+                  puts "hello"
+                end
+          end
+        RUBY
+
+        source_code, _source_url = @helpers.method_source_code_and_url(method)
+        puts source_code
+        expected_source = <<~EXPECTED.chomp
+          def bar
+              puts &quot;hello&quot;
+            end
+        EXPECTED
+        _(source_code).must_include expected_source
+      end
     end
   end
 end
