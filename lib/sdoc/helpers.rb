@@ -16,7 +16,7 @@ module SDoc::Helpers
       source_code = normalize_indentation(source_code)
     end
 
-    [rdoc_method.instance_of?(RDoc::GhostMethod) ? nil : source_code, source_url]
+    [(source_code unless rdoc_method.instance_of?(RDoc::GhostMethod)), source_url]
   end
 
   private
