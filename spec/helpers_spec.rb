@@ -137,7 +137,6 @@ describe SDoc::Helpers do
         RUBY
 
         source_code, _source_url = @helpers.method_source_code_and_url(method)
-        puts source_code
         expected_source = <<~EXPECTED.chomp
           def baz
             puts &quot;hello&quot;
@@ -159,7 +158,6 @@ describe SDoc::Helpers do
         RUBY
 
         source_code, _source_url = @helpers.method_source_code_and_url(method)
-        puts source_code
         expected_source = <<~EXPECTED.chomp
           def bar
               puts &quot;hello&quot;
