@@ -13,29 +13,6 @@ describe SDoc::Helpers do
     @helpers.options = RDoc::Options.new
   end
 
-  describe "#strip_tags" do
-    it "should strip out HTML tags from the given string" do
-      strings = [
-        [ %(<strong>Hello world</strong>),                                      "Hello world"          ],
-        [ %(<a href="Streams.html">Streams</a> are great),                      "Streams are great"    ],
-        [ %(<a href="https://github.com?x=1&y=2#123">zzak/sdoc</a> Standalone), "zzak/sdoc Standalone" ],
-        [ %(<h1 id="module-AR::Cb-label-Foo+Bar">AR Cb</h1>),                   "AR Cb"                ],
-        [ %(<a href="../Base.html">Base</a>),                                   "Base"                 ],
-        [ %(Some<br>\ntext),                                                    "Some\ntext"           ]
-      ]
-
-      strings.each do |(html, stripped)|
-        _(@helpers.strip_tags(html)).must_equal stripped
-      end
-    end
-  end
-
-  describe "#truncate" do
-    it "should truncate the given text around a given length" do
-      _(@helpers.truncate("Hello world", length: 5)).must_equal "Hello."
-    end
-  end
-
   describe "#method_source_code_and_url" do
     before :each do
       @helpers.options.github = true
@@ -99,6 +76,95 @@ describe SDoc::Helpers do
 
       _(source_code).must_match %r{# File .+\.rb, line 2\b}
       _(source_url).must_be_nil
+    end
+
+    it "sanitizes source code" do
+      @helpers.options.github = false
+
+      method = rdoc_top_level_for(<<~'RUBY').find_module_named("Foo").find_method("hi", false)
+        module Foo
+          def hi(msg) = puts "Hi, #{msg}!"
+        end
+      RUBY
+
+      source_code, source_url = @helpers.method_source_code_and_url(method)
+      expected_source = <<~EXPECTED.chomp
+        def hi(msg) = puts &quot;Hi, \#{msg}!&quot;
+      EXPECTED
+      _(source_code).must_include expected_source
+      _(source_url).must_be_nil
+    end
+
+    describe "normalizing indentation" do
+      it "normalizes the code" do
+        method = rdoc_top_level_for(<<~RUBY).find_module_named("Foo::Bar").find_method("baz", false)
+          module Foo
+            module Bar
+                def baz
+                    puts "hello"
+                    if true
+                      puts "world"
+                    end
+                end
+            end
+          end
+        RUBY
+
+        source_code, _source_url = @helpers.method_source_code_and_url(method)
+        expected_source = <<~EXPECTED.chomp
+          def baz
+              puts &quot;hello&quot;
+              if true
+                puts &quot;world&quot;
+              end
+          end
+        EXPECTED
+        _(source_code).must_include expected_source
+      end
+
+      it "normalizes the code 2" do
+        method = rdoc_top_level_for(<<~RUBY).find_module_named("Foo::Bar").find_method("baz", false)
+          module Foo
+            module Bar
+                def baz
+                  puts "hello"
+                    if true
+                      puts "world"
+                  end
+              end
+            end
+          end
+        RUBY
+
+        source_code, _source_url = @helpers.method_source_code_and_url(method)
+        expected_source = <<~EXPECTED.chomp
+          def baz
+            puts &quot;hello&quot;
+              if true
+                puts &quot;world&quot;
+            end
+          end
+        EXPECTED
+        _(source_code).must_include expected_source
+      end
+
+      it "normalizes the code 3" do
+        method = rdoc_top_level_for(<<~RUBY).find_module_named("Foo").find_method("bar", false)
+          module Foo
+              def bar
+                  puts "hello"
+                end
+          end
+        RUBY
+
+        source_code, _source_url = @helpers.method_source_code_and_url(method)
+        expected_source = <<~EXPECTED.chomp
+          def bar
+              puts &quot;hello&quot;
+            end
+        EXPECTED
+        _(source_code).must_include expected_source
+      end
     end
   end
 end
