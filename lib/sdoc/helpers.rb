@@ -8,9 +8,40 @@ module SDoc::Helpers
   require_relative "helpers/git"
   include ::SDoc::Helpers::Git
 
+  def link_to(text, url = nil, html_attributes = {})
+    url, html_attributes = nil, url if url.is_a?(Hash)
+    url ||= text
+
+    text = _link_body(text)
+
+    if url.is_a?(RDoc::CodeObject)
+      url = "/#{url.path}"
+      default_class = "ref-link" if text.start_with?("<code>") && text.end_with?("</code>")
+    end
+
+    html_attributes = html_attributes.transform_keys(&:to_s)
+    html_attributes = { "href" => url, "class" => default_class }.compact.merge(html_attributes)
+
+    attribute_string = html_attributes.map { |name, value| %( #{name}="#{h value}") }.join
+    %(<a#{attribute_string}>#{text}</a>)
+  end
+
+  def _link_body(text)
+    text.is_a?(RDoc::CodeObject) ? full_name_for(text) : text
+  end
+
+  def link_to_if(condition, text, *args)
+    condition ? link_to(text, *args) : _link_body(text)
+  end
+
   def short_name_for(named)
     named = named.name if named.is_a?(RDoc::CodeObject)
     "<code>#{h named}</code>"
+  end
+
+  def full_name_for(named)
+    named = named.full_name if named.is_a?(RDoc::CodeObject)
+    "<code>#{named.split(%r"(?<=./|.::)").map { |part| h part }.join("<wbr>")}</code>"
   end
 
   def description_for(rdoc_object)
