@@ -138,19 +138,9 @@
       <h2 id="<%= type.to_s + "-" + visibility.to_s %>-methods"><%= type.capitalize %> <%= visibility.to_s.capitalize %> methods</h2>
       <% methods.each do |method| %>
         <div class="method">
-          <h3 id="<%= method.aref %>">
-            <% if method.call_seq %>
-              <%= method.call_seq.gsub(/->/, '&rarr;').gsub(/\n(.)/, '<br />\1') %>
-            <% else %>
-              <%= h method.name %><%= h method.params %>
-            <% end %>
-          </h3>
+          <h3 id="<%= method.aref %>"><%= method_signature method %></h3>
 
-          <% if method.comment %>
-            <div class="description">
-              <%= method.description.strip %>
-            </div>
-          <% end %>
+          <%= description_for method %>
 
           <% unless method.aliases.empty? %>
             <div class="aka">

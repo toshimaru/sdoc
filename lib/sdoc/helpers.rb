@@ -8,6 +8,25 @@ module SDoc::Helpers
   require_relative "helpers/git"
   include ::SDoc::Helpers::Git
 
+  def description_for(rdoc_object)
+    if rdoc_object.comment && !rdoc_object.comment.empty?
+      %(<div class="description">#{rdoc_object.description}</div>)
+    end
+  end
+
+  def method_signature(rdoc_method)
+    signature = if rdoc_method.call_seq
+      # Support specifying a call-seq like `to_s -> string`
+      rdoc_method.call_seq.gsub(/^\s*([^(\s]+)(.*?)(?: -> (.+))?$/) do
+        "<b>#{h $1}</b>#{h $2}#{" <span class=\"returns\">&rarr;</span> #{h $3}" if $3}"
+      end
+    else
+      "<b>#{h rdoc_method.name}</b>#{h rdoc_method.params}"
+    end
+
+    "<code>#{signature}</code>"
+  end
+
   def method_source_code_and_url(rdoc_method)
     source_code = h(rdoc_method.tokens_to_s) if rdoc_method.token_stream
 
