@@ -8,6 +8,11 @@ module SDoc::Helpers
   require_relative "helpers/git"
   include ::SDoc::Helpers::Git
 
+  def short_name_for(named)
+    named = named.name if named.is_a?(RDoc::CodeObject)
+    "<code>#{h named}</code>"
+  end
+
   def description_for(rdoc_object)
     if rdoc_object.comment && !rdoc_object.comment.empty?
       %(<div class="description">#{rdoc_object.description}</div>)
