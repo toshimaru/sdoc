@@ -13,6 +13,103 @@ describe SDoc::Helpers do
     @helpers.options = RDoc::Options.new
   end
 
+  describe "#link_to" do
+    it "returns a link tag" do
+      _(@helpers.link_to("Foo::Bar::Qux", "foo/bar/qux.html")).
+        must_equal %(<a href="foo/bar/qux.html">Foo::Bar::Qux</a>)
+    end
+
+    it "supports HTML attributes" do
+      _(@helpers.link_to("foo", "bar", class: "qux", "data-hoge": "fuga")).
+        must_equal %(<a href="bar" class="qux" data-hoge="fuga">foo</a>)
+    end
+
+    it "escapes the HTML attributes" do
+      _(@helpers.link_to("Foo", "foo", title: "Foo < Object")).
+        must_equal %(<a href="foo" title="Foo &lt; Object">Foo</a>)
+    end
+
+    it "does not escape the link body" do
+      _(@helpers.link_to("<code>Foo</code>", "foo")).
+        must_equal %(<a href="foo"><code>Foo</code></a>)
+    end
+
+    it "uses the first argument as the URL when no URL is specified" do
+      _(@helpers.link_to("foo/bar/qux.html")).
+        must_equal %(<a href="foo/bar/qux.html">foo/bar/qux.html</a>)
+
+      _(@helpers.link_to("foo/bar/qux.html", "data-hoge": "fuga")).
+        must_equal %(<a href="foo/bar/qux.html" data-hoge="fuga">foo/bar/qux.html</a>)
+    end
+
+    it "uses #full_name_for when the text argument is an RDoc::CodeObject" do
+      top_level = rdoc_top_level_for <<~RUBY
+        module Foo; class Bar; def qux; end; end; end
+      RUBY
+
+      [
+        top_level,
+        top_level.find_module_named("Foo"),
+        top_level.find_module_named("Foo::Bar"),
+        top_level.find_module_named("Foo::Bar").find_method("qux", false),
+      ].each do |code_object|
+        _(@helpers.link_to(code_object, "url")).
+          must_equal %(<a href="url">#{@helpers.full_name_for(code_object)}</a>)
+      end
+    end
+
+    it "uses RDoc::CodeObject#path as the URL when URL argument is an RDoc::CodeObject" do
+      top_level = rdoc_top_level_for <<~RUBY
+        module Foo; class Bar; def qux; end; end; end
+      RUBY
+
+      [
+        top_level,
+        top_level.find_module_named("Foo"),
+        top_level.find_module_named("Foo::Bar"),
+        top_level.find_module_named("Foo::Bar").find_method("qux", false),
+      ].each do |code_object|
+        _(@helpers.link_to("text", code_object)).
+          must_equal %(<a href="/#{code_object.path}">text</a>)
+      end
+    end
+
+    it "uses .ref-link as the default class when creating a <code> link to an RDoc::CodeObject" do
+      rdoc_module = rdoc_top_level_for(<<~RUBY).find_module_named("Foo::Bar")
+        module Foo; module Bar; end
+      RUBY
+
+      _(@helpers.link_to(rdoc_module)).
+        must_equal %(<a href="/#{rdoc_module.path}" class="ref-link">#{@helpers.full_name_for(rdoc_module)}</a>)
+
+      _(@helpers.link_to("<code>Bar</code>", rdoc_module)).
+        must_equal %(<a href="/#{rdoc_module.path}" class="ref-link"><code>Bar</code></a>)
+
+      _(@helpers.link_to("<code>Bar</code>", rdoc_module, class: "other")).
+        must_equal %(<a href="/#{rdoc_module.path}" class="other"><code>Bar</code></a>)
+
+      _(@helpers.link_to("Jump to <code>Bar</code>", rdoc_module)).
+        must_equal %(<a href="/#{rdoc_module.path}">Jump to <code>Bar</code></a>)
+    end
+  end
+
+  describe "#link_to_if" do
+    it "returns the link's HTML when the condition is true" do
+      args = ["<code>Foo</code>", "foo", title: "Foo < Object"]
+      _(@helpers.link_to_if(true, *args)).must_equal @helpers.link_to(*args)
+    end
+
+    it "returns the link's inner HTML when the condition is false" do
+      _(@helpers.link_to_if(false, "<code>Foo</code>", "url")).must_equal "<code>Foo</code>"
+
+      rdoc_module = rdoc_top_level_for(<<~RUBY).find_module_named("Foo::Bar")
+        module Foo; class Bar; end; end
+      RUBY
+
+      _(@helpers.link_to_if(false, rdoc_module, "url")).must_equal @helpers.full_name_for(rdoc_module)
+    end
+  end
+
   describe "#method_source_code_and_url" do
     before :each do
       @helpers.options.github = true
