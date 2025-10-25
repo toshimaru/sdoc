@@ -34,6 +34,14 @@ module SDoc::Helpers
     condition ? link_to(text, *args) : _link_body(text)
   end
 
+  def link_to_external(text, url, html_attributes = {})
+    html_attributes = html_attributes.transform_keys(&:to_s)
+    html_attributes = { "target" => "_blank", "class" => nil }.merge(html_attributes)
+    html_attributes["class"] = [*html_attributes["class"], "external-link"].join(" ")
+
+    link_to(text, url, html_attributes)
+  end
+
   def short_name_for(named)
     named = named.name if named.is_a?(RDoc::CodeObject)
     "<code>#{h named}</code>"
