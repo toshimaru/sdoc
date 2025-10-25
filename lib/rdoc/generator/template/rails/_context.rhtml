@@ -170,7 +170,7 @@
               <% end %>
             </details>
           <% elsif source_url %>
-            <a href="<%= source_url %>" target="_blank" class="github_url">🔎 See on GitHub</a>
+            <p class="method__source"><%= link_to_external "🔎 See on GitHub", source_url %></p>
           <% end %>
         </div>
         <% end %><%# methods.each %>
