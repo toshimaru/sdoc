@@ -20,13 +20,14 @@ layout: default
                 </span>
             <% end %>
         </h1>
-        <ul class="files">
-            <% context.in_files.each do |file| %>
-            <li><a href="<%= "#{rel_prefix}/#{h file.path}" %>"><%= h file.absolute_name %></a></li>
-            <% end  %>
-        </ul>
     </div>
     <div id="bodyContent">
         <%= include_template '_context.rhtml', { context: context, rel_prefix: rel_prefix } %>
+        <h2>Definition files</h2>
+        <ul class="files">
+            <% context.in_files.each do |file| %>
+            <li><a href="<%= "#{rel_prefix}/#{h file.path}" %>"><%= h file.absolute_name %></a></li>
+            <% end %>
+        </ul>
     </div>
 </div>
