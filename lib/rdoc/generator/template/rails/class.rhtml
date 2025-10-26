@@ -7,7 +7,7 @@ layout: default
         <% if ENV['HORO_PROJECT_NAME'] %>
             <span><%= h ENV['HORO_PROJECT_NAME'] %> <%= h ENV['HORO_PROJECT_VERSION'] %></span><br />
         <% end %>
-        <div class="type"><%= context.module? ? 'Module' : 'Class' %></div>
+        <div class="type"><%= context.type %></div>
         <h1>
             <%= h context.full_name %>
             <% if context.type == 'class' %>
