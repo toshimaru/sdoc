@@ -178,10 +178,12 @@
     <% end %><%# context.methods_by_type %>
   <% end %><%# context.each_section %>
 
-  <h2>Definition files</h2>
-  <ul class="files">
+  <% if context.in_files.any? %>
+    <h2>Definition files</h2>
+    <ul class="files">
       <% context.in_files.each do |file| %>
       <li><a href="<%= "#{rel_prefix}/#{h file.path}" %>"><%= h file.absolute_name %></a></li>
       <% end %>
-  </ul>
+    </ul>
+  <% end %>
 </div>
