@@ -7,7 +7,7 @@ layout: default
         <% if ENV['HORO_PROJECT_NAME'] %>
             <span><%= h ENV['HORO_PROJECT_NAME'] %> <%= h ENV['HORO_PROJECT_VERSION'] %></span><br />
         <% end %>
-        <div class="type"><%= context.module? ? 'Module' : 'Class' %></div>
+        <div class="type"><%= context.type %></div>
         <h1>
             <%= h context.full_name %>
             <% if context.type == 'class' %>
@@ -20,11 +20,6 @@ layout: default
                 </span>
             <% end %>
         </h1>
-        <ul class="files">
-            <% context.in_files.each do |file| %>
-            <li><a href="<%= "#{rel_prefix}/#{h file.path}" %>"><%= h file.absolute_name %></a></li>
-            <% end  %>
-        </ul>
     </div>
     <div id="bodyContent">
         <%= include_template '_context.rhtml', { context: context, rel_prefix: rel_prefix } %>
